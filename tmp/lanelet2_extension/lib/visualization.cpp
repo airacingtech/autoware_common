@@ -1100,7 +1100,7 @@ void visualization::pushTrafficLightTriangleMarker(
     marker->points.push_back(i);
     marker->colors.push_back(cl);
   }
-  for (const auto & i : tri0) {
+  for (const auto & i : tri1) {
     marker->points.push_back(i);
     marker->colors.push_back(cl);
   }
@@ -1261,6 +1261,48 @@ void visualization::pushArrowsMarker(
     marker->points.push_back(p);
     marker->colors.push_back(c);
   }
+}
+
+visualization_msgs::msg::MarkerArray visualization::noObstacleSegmentationAreaAsMarkerArray(
+  const lanelet::ConstPolygons3d & no_obstacle_segmentation_area,
+  const std_msgs::msg::ColorRGBA & c)
+{
+  visualization_msgs::msg::MarkerArray marker_array;
+  if (no_obstacle_segmentation_area.empty()) {
+    return marker_array;
+  }
+
+  visualization_msgs::msg::Marker marker = createPolygonMarker("no_obstacle_segmentation_area", c);
+  for (const auto & polygon : no_obstacle_segmentation_area) {
+    pushPolygonMarker(&marker, polygon, c);
+  }
+
+  if (!marker.points.empty()) {
+    marker_array.markers.push_back(marker);
+  }
+  return marker_array;
+}
+
+visualization_msgs::msg::MarkerArray
+visualization::noObstacleSegmentationAreaForRunOutAsMarkerArray(
+  const lanelet::ConstPolygons3d & no_obstacle_segmentation_area_for_run_out,
+  const std_msgs::msg::ColorRGBA & c)
+{
+  visualization_msgs::msg::MarkerArray marker_array;
+  if (no_obstacle_segmentation_area_for_run_out.empty()) {
+    return marker_array;
+  }
+
+  visualization_msgs::msg::Marker marker =
+    createPolygonMarker("no_obstacle_segmentation_area_for_run_out", c);
+  for (const auto & polygon : no_obstacle_segmentation_area_for_run_out) {
+    pushPolygonMarker(&marker, polygon, c);
+  }
+
+  if (!marker.points.empty()) {
+    marker_array.markers.push_back(marker);
+  }
+  return marker_array;
 }
 
 }  // namespace lanelet
